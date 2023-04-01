@@ -1,0 +1,93 @@
+<div class="d-flex justify-content-end">
+<button  data-bs-toggle="modal" data-bs-target="#newListModal">Add List</button>
+</div>
+<div class="d-flex col-11">
+  <div class="card" style="width: 18rem;" (dragover)="onDragOver($event)" (drop)="onDrop($event,item)" *ngFor="let item of list">
+    <div class="card-header">
+      <div class="d-flex justify-content-between">
+      {{item?.listHeader}}
+      <button (click)="deleteList(item)" class="delButton"><img src="assets\close.png" style="width:10px;height:10px"/></button>
+      </div>
+    </div>
+    <div class="list-group list-group-flush">
+      <div class="list-group-item " *ngFor="let card of item?.cards" draggable="true" (dragstart)="onDragStart($event, card,item)">
+        <div class="d-flex justify-content-between">
+        <div>{{card?.cardHeader}}</div>
+        <button (click)="deleteCard(list,item,card?.cardHeader)" class="delButton"><img src="assets\close.png" style="width:10px;height:10px"/></button>
+        </div>
+        <div>{{card?.cardDescription}}</div>
+        <div class="mt-5">Share
+          <img src="assets\share.png" style="width:10px;height:10px"/>
+        </div>
+      </div>
+    </div>
+
+    <button data-bs-toggle="modal" data-bs-target="#newCardModal"  (click)="listSelected(item)"><img src="assets\plus.png" style="width:15px;height:15px;border-radius: 50%;border: 1px solid black;"/></button>
+  </div>
+</div>
+
+
+<div class="modal fade" id="newListModal" tabindex="-1" aria-labelledby="newListModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add New List</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="listForm">
+          <div>
+          <label>Enter List Name</label>
+        </div>
+          <input type="text" formControlName="listName"><br>
+          <small *ngIf="listForm?.get('listName')?.errors && listForm?.get('listName')?.touched"
+          style="font-size: 11px;" class="text-danger">*List Name is Required</small>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" (click)="addNewList()" data-bs-dismiss="modal" [disabled]="listForm.invalid">Add</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<h5 [ngClass]="alertCard=='Card Added SuccesFully'?'text-success':'text-danger'">{{alertCard}}</h5>
+<h5 class="text-success">{{alertList}}</h5>
+
+<div class="modal fade" id="newCardModal" tabindex="-1" aria-labelledby="newCardModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add New List</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="cardForm">
+          <div>
+          <label>Enter Card Name</label>
+        </div>
+          <input type="text" formControlName="cardHeader"><br>
+          <small *ngIf="cardForm?.get('cardHeader')?.errors && cardForm?.get('cardHeader')?.touched"
+          style="font-size: 11px;" class="text-danger">*Card Name is Required</small>
+          <div>
+            <label>Enter Card Description</label>
+          </div>
+            <input type="text" formControlName="cardDescription"><br>
+            <small *ngIf="cardForm?.get('cardDescription')?.errors && cardForm?.get('cardDescription')?.touched"
+          style="font-size: 11px;" class="text-danger">*Card Description is Required</small>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" (click)="addCard()" data-bs-dismiss="modal" [disabled]="cardForm.invalid">Add</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
